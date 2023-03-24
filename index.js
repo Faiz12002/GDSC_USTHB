@@ -5,6 +5,8 @@
 > Welcome link: "https://i.imgur.com/zQ1vz7h.png"
 > Socials link: "https://i.imgur.com/uOaWjy1.png"
 > Rules link: "https://i.imgur.com/bVbxvVO.png"
+> roles id: member: 1050147217136164884
+            community: 953975361446756382
 */
 
 // BASE IMPORTS AND CONFIGURATIONS =======
@@ -12,7 +14,7 @@ import { config } from "dotenv";
 import { channelLink, Client, EmbedBuilder, Events, GatewayIntentBits, InteractionCollector, Message, ReactionCollector, Routes, SlashCommandBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType} from "discord.js"; 
 import { REST } from '@discordjs/rest'
 config();
-const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageTyping, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.DirectMessages], disableEveryone:false});
+const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageTyping, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildMembers], disableEveryone:false});
 const BOT_TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.ID;
 // END OF BASE IMPORTS AND CONFIGURATIONS ====================
@@ -23,7 +25,12 @@ client.on('ready', () => {
     console.log(`[${client.user.id}]:${client.user.tag} logged in successfully!`);
     });
 // END OF LOGIN =======================
-
+// WELCOMING MESSAGE
+client.on(Events.GuildMemberAdd, async member => {
+    console.log(member)
+    client.guild.channels.cache.get('1027214112742191174').send(`Hey <@${member.id}>, welcome to ** GDSC USTHB ** Discord server, don't forget to introduce yourself in <#1027234826497032298>.`)
+})
+//
 
 //EMBEDS ====
 const welcomeEmbed = new EmbedBuilder().setImage('https://i.imgur.com/zQ1vz7h.png').setColor('4285F4')
@@ -328,17 +335,18 @@ client.on(Events.InteractionCreate, interaction => {
             .setTitle('New social media post!')
             .setDescription(interaction.fields.getTextInputValue('description'))
             .addFields({name: "Check out on: ", value:`[Facebook](${interaction.fields.getTextInputValue('fblink')}) | [Instagram](${interaction.fields.getTextInputValue('instalink')}) | [LinkedIn](${interaction.fields.getTextInputValue('lilink')}) | [Twitter](${interaction.fields.getTextInputValue('twtrlink')})`})
-            
+            //send in main core server
         client.channels.cache.get('921106241441374208').send(
             {
                 embeds:[socialPostEmbed],
-                content:`@everyone`
+                content:`@everyone <@1050147217136164884>`
             }
             );
+            //send in community
         client.channels.cache.get('919215628089442384').send(
             {
                 embeds:[socialPostEmbed],
-                content:`@everyone`
+                content:`@everyone <@953975361446756382>`
             }
             )
             interaction.reply({
